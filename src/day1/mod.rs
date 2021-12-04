@@ -1,30 +1,21 @@
-use itertools::Itertools;
-
-use super::*;
-
-type IntTup = (i32, i32);
-
-fn add_if_larger(acc: i32, (prev, next): IntTup) -> i32 {
-    acc + if next > prev { 1 } else { 0 }
+pub fn part1() -> String {
+    count_increments(1)
 }
 
-pub fn part1() {
-    let res = get_text("day1")
-        .lines()
-        .map(|s| s.parse::<i32>().unwrap())
-        .tuple_windows::<IntTup>()
-        .fold(0, add_if_larger);
-    println!("{}", res);
+pub fn part2() -> String {
+    count_increments(3)
 }
 
-pub fn part2() {
-    let res = get_text("day1")
-        .lines()
-        .map(|s| s.parse::<i32>().unwrap())
-        .collect_vec()
-        .windows(3)
+
+fn count_increments(win_size: usize) -> String {
+    include_str!("input.txt").lines()
+        .filter_map(|s| s.parse::<i32>().ok())
+        .collect::<Vec<_>>()
+        .windows(win_size)
         .map(|x| x.iter().sum())
-        .tuple_windows::<IntTup>()
-        .fold(0, add_if_larger);
-    println!("{}", res);
+        .collect::<Vec<i32>>()
+        .windows(2)
+        .filter(|a| a[0] < a[1])
+        .count()
+        .to_string()
 }
